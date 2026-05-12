@@ -3,32 +3,40 @@ name: CI (Tests & Linting)
 on:
   push:
     branches: [ main, develop ]
+
   pull_request:
     branches: [ main ]
 
 jobs:
   test:
     runs-on: ubuntu-latest
+
     steps:
-    - uses: actions/checkout@v4
-    
-    - name: Setup PHP
-      uses: shivammathur/setup-php@v2
-      with:
-        php-version: '8.4'
-        extensions: mbstring, xml, ctype, iconv, mysql, redis
-        coverage: xdebug
+      - name: Checkout Code
+        uses: actions/checkout@v4
 
-    - name: Install Dependencies
-      run: composer install -q --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.4'
 
-    - name: Create Database
-      run: |
-        mkdir -p database
-        touch database/database.sqlite
+      - name: Copy .env
+        run: cp .env.example .env
 
-    - name: Run Tests
-      env:
-        DB_CONNECTION: sqlite
-        DB_DATABASE: database/database.sqlite
-      run: php artisan test
+      - name: Install Composer Dependencies
+        run: composer install --no-interaction --prefer-dist
+
+      - name: Start Docker Containers
+        run: docker compose up -d --build
+
+      - name: Generate App Key
+        run: docker compose exec -T laravel.test php artisan key:generate
+
+      - name: Run Migrations
+        run: docker compose exec -T laravel.test php artisan migrate --force
+
+      - name: Run Pint
+        run: docker compose exec -T laravel.test ./vendor/bin/pint --test
+
+      - name: Run Tests
+        run: docker compose exec -T laravel.test php artisan test
