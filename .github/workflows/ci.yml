@@ -2,10 +2,13 @@ name: CI (Tests & Linting)
 
 on:
   push:
-    branches: [ main, develop ]
+    branches:
+      - main
+      - develop
 
   pull_request:
-    branches: [ main ]
+    branches:
+      - main
 
 jobs:
   test:
@@ -19,9 +22,16 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           php-version: '8.4'
+          extensions: mbstring, pdo_mysql, mysql, redis, xml, ctype, iconv
+          coverage: none
 
-      - name: Copy .env
+      - name: Copy Environment File
         run: cp .env.example .env
+
+      - name: Set Sail Environment Variables
+        run: |
+          echo "WWWGROUP=1000" >> .env
+          echo "WWWUSER=1000" >> .env
 
       - name: Install Composer Dependencies
         run: composer install --no-interaction --prefer-dist
@@ -29,14 +39,20 @@ jobs:
       - name: Start Docker Containers
         run: docker compose up -d --build
 
-      - name: Generate App Key
+      - name: Wait for MySQL
+        run: |
+          until docker compose exec -T mysql mysqladmin ping -p"${DB_PASSWORD}" --silent; do
+            sleep 2
+          done
+
+      - name: Generate Application Key
         run: docker compose exec -T laravel.test php artisan key:generate
 
-      - name: Run Migrations
+      - name: Run Database Migrations
         run: docker compose exec -T laravel.test php artisan migrate --force
 
-      - name: Run Pint
+      - name: Run Laravel Pint
         run: docker compose exec -T laravel.test ./vendor/bin/pint --test
 
-      - name: Run Tests
+      - name: Run PHPUnit Tests
         run: docker compose exec -T laravel.test php artisan test
