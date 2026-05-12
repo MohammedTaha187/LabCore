@@ -13,21 +13,21 @@ LabCore helps laboratories and diagnostic centers manage patients, lab orders, t
 # 📸 Screenshots & Demos
 
 ### 📊 Dashboard
-![Dashboard Mockup](/home/muhammad/.gemini/antigravity/brain/7a582563-ee9f-41b0-b154-2e011b70ab65/labcore_dashboard_mockup_1778621194700.png)
+![Dashboard Mockup](docs/screenshots/dashboard.png)
 
 ### 👤 Patient Profile
-![Patient Profile Mockup](/home/muhammad/.gemini/antigravity/brain/7a582563-ee9f-41b0-b154-2e011b70ab65/labcore_patient_profile_mockup_1778621212649.png)
+![Patient Profile Mockup](docs/screenshots/patient_profile.png)
 
 ### 📈 Advanced Analytics
-![Analytics Mockup](/home/muhammad/.gemini/antigravity/brain/7a582563-ee9f-41b0-b154-2e011b70ab65/labcore_analytics_mockup_1778621224978.png)
+![Analytics Mockup](docs/screenshots/analytics.png)
 
 ### 📄 Medical Reports (PDF)
-![PDF Report Mockup](/home/muhammad/.gemini/antigravity/brain/7a582563-ee9f-41b0-b154-2e011b70ab65/labcore_pdf_report_mockup_1778621240928.png)
+![PDF Report Mockup](docs/screenshots/pdf_report.png)
 
 ### 🔍 Feature Highlights
 | Barcode Scanning | Tenant Creation |
 | :---: | :---: |
-| ![Barcode Scanning](/home/muhammad/.gemini/antigravity/brain/7a582563-ee9f-41b0-b154-2e011b70ab65/labcore_barcode_scanning_mockup_1778621300943.png) | ![Tenant Creation](/home/muhammad/.gemini/antigravity/brain/7a582563-ee9f-41b0-b154-2e011b70ab65/labcore_tenant_creation_mockup_1778621320296.png) |
+| ![Barcode Scanning](docs/screenshots/barcode_scanning.png) | ![Tenant Creation](docs/screenshots/tenant_creation.png) |
 
 ---
 
