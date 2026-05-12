@@ -2,17 +2,19 @@
 
 namespace EasyDev\Laravel\Commands;
 
-use Illuminate\Console\Command;
 use EasyDev\Laravel\Services\DBAnalyzer;
+use Illuminate\Console\Command;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
 
 class SmartSyncRelationsCommand extends Command
 {
     protected $signature = 'smart:sync-relations {--module= : The module to sync models for}';
+
     protected $description = 'Scan DB and sync relationships (belongsTo & hasMany) into Models';
 
     protected $analyzer;
+
     protected $modelMap = [];
 
     public function __construct(DBAnalyzer $analyzer)
@@ -23,18 +25,19 @@ class SmartSyncRelationsCommand extends Command
 
     public function handle()
     {
-        $this->info("Scanning models and database schema...");
+        $this->info('Scanning models and database schema...');
 
         $models = $this->getModels();
 
         if (empty($models)) {
-            $this->warn("No models found.");
+            $this->warn('No models found.');
+
             return;
         }
 
         // Build a map of ModelName => FullNamespace
         foreach ($models as $m) {
-            $this->modelMap[$m['name']] = $m['namespace'] . "\\" . $m['name'];
+            $this->modelMap[$m['name']] = $m['namespace'].'\\'.$m['name'];
         }
 
         foreach ($models as $modelData) {
@@ -49,12 +52,14 @@ class SmartSyncRelationsCommand extends Command
         $models = [];
 
         // Discover app-level models
-        if (!$this->option('module')) {
+        if (! $this->option('module')) {
             $appPath = app_path('Models');
             if (File::exists($appPath)) {
                 foreach (File::files($appPath) as $file) {
                     $name = $file->getBasename('.php');
-                    if ($name === 'User') continue; // Skip standard user
+                    if ($name === 'User') {
+                        continue;
+                    } // Skip standard user
                     $models[] = [
                         'name' => $name,
                         'path' => $file->getRealPath(),
@@ -87,13 +92,14 @@ class SmartSyncRelationsCommand extends Command
 
     protected function syncModel(array $modelData)
     {
-        $fullClass = $modelData['namespace'] . "\\" . $modelData['name'];
-        
+        $fullClass = $modelData['namespace'].'\\'.$modelData['name'];
+
         try {
             $modelInstance = new $fullClass;
             $table = $modelInstance->getTable();
         } catch (\Exception $e) {
             $this->error("Could not instantiate {$fullClass}. Skpping.");
+
             return;
         }
 
@@ -124,7 +130,7 @@ class SmartSyncRelationsCommand extends Command
     protected function injectRelationship(string $content, string $type, array $rel, string $modelName): string
     {
         $methodName = $rel['method'];
-        
+
         if (Str::contains($content, "function {$methodName}()")) {
             return $content;
         }
@@ -133,7 +139,7 @@ class SmartSyncRelationsCommand extends Command
 
         $returnType = $type === 'belongsTo' ? 'return $this->belongsTo(' : 'return $this->hasMany(';
         $targetClass = $this->modelMap[$rel['model']] ?? "\\App\\Models\\{$rel['model']}"; // Fallback to App\Models
-        $params = $type === 'belongsTo' 
+        $params = $type === 'belongsTo'
             ? "{$targetClass}::class, '{$rel['foreign_key']}', '{$rel['owner_key']}'"
             : "{$targetClass}::class, '{$rel['foreign_key']}', '{$rel['local_key']}'";
 
@@ -141,6 +147,6 @@ class SmartSyncRelationsCommand extends Command
         $code = "\n    public function {$methodName}()\n    {\n        {$returnType}{$params});\n    }\n";
 
         // Insert before the last closing brace
-        return preg_replace('/}([^}]*)$/', $code . '}$1', $content);
+        return preg_replace('/}([^}]*)$/', $code.'}$1', $content);
     }
 }

@@ -18,15 +18,15 @@ trait ApiResponse
      * }
      */
     protected function successResponse(
-        mixed  $data    = null,
+        mixed $data = null,
         string $message = 'Done',
-        int    $code    = 200,
-        array  $meta    = []
+        int $code = 200,
+        array $meta = []
     ): JsonResponse {
         $payload = [
             'success' => true,
             'message' => $message,
-            'data'    => $data,
+            'data' => $data,
         ];
 
         if (! empty($meta)) {
@@ -41,13 +41,13 @@ trait ApiResponse
      */
     protected function errorResponse(
         string $message,
-        int    $code   = 400,
-        mixed  $errors = null
+        int $code = 400,
+        mixed $errors = null
     ): JsonResponse {
         return response()->json([
             'success' => false,
             'message' => $message,
-            'errors'  => $errors,
+            'errors' => $errors,
         ], $code);
     }
 
@@ -55,19 +55,19 @@ trait ApiResponse
      * Paginated success response — extracts pagination meta automatically.
      */
     protected function paginatedResponse(
-        mixed  $paginator,
+        mixed $paginator,
         string $message = 'Done',
-        int    $code    = 200
+        int $code = 200
     ): JsonResponse {
         return response()->json([
             'success' => true,
             'message' => $message,
-            'data'    => $paginator->items(),
-            'meta'    => [
+            'data' => $paginator->items(),
+            'meta' => [
                 'current_page' => $paginator->currentPage(),
-                'last_page'    => $paginator->lastPage(),
-                'per_page'     => $paginator->perPage(),
-                'total'        => $paginator->total(),
+                'last_page' => $paginator->lastPage(),
+                'per_page' => $paginator->perPage(),
+                'total' => $paginator->total(),
             ],
         ], $code);
     }

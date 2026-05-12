@@ -6,9 +6,9 @@ return [
      */
     'namespaces' => [
         'controller' => 'App\\Http\\Controllers\\Api\\V1',
-        'service'    => 'App\\Services',
+        'service' => 'App\\Services',
         'repository' => 'App\\Repositories',
-        'dto'        => 'App\\DTOs',
+        'dto' => 'App\\DTOs',
     ],
 
     /**
@@ -16,9 +16,9 @@ return [
      */
     'paths' => [
         'controller' => app_path('Http/Controllers/Api/V1'),
-        'service'    => app_path('Services'),
+        'service' => app_path('Services'),
         'repository' => app_path('Repositories'),
-        'dto'        => app_path('DTOs'),
+        'dto' => app_path('DTOs'),
     ],
 
     /**

@@ -12,11 +12,14 @@ class BaseNotification extends Notification implements ShouldQueue
     use Queueable;
 
     protected $title;
+
     protected $message;
+
     protected $actionText;
+
     protected $actionUrl;
 
-    public function __construct(string $title, string $message, string $actionText = null, string $actionUrl = null)
+    public function __construct(string $title, string $message, ?string $actionText = null, ?string $actionUrl = null)
     {
         $this->title = $title;
         $this->message = $message;
@@ -33,7 +36,7 @@ class BaseNotification extends Notification implements ShouldQueue
     {
         $mail = (new MailMessage)
             ->subject($this->title)
-            ->greeting('Hello ' . $notifiable->name . '!')
+            ->greeting('Hello '.$notifiable->name.'!')
             ->line($this->message);
 
         if ($this->actionText && $this->actionUrl) {

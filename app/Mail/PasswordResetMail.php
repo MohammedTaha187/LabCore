@@ -15,6 +15,6 @@ class PasswordResetMail extends Mailable
     public function build()
     {
         return $this->subject('Password Reset Code')
-                    ->markdown('emails.auth.password_reset');
+            ->markdown('emails.auth.password_reset');
     }
 }

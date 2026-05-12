@@ -2,13 +2,14 @@
 
 namespace EasyDev\Laravel\Commands;
 
-use Illuminate\Console\Command;
 use EasyDev\Laravel\Services\DBAnalyzer;
+use Illuminate\Console\Command;
 use Illuminate\Support\Str;
 
 class SmartFromMigrationCommand extends Command
 {
     protected $signature = 'smart:from-migration {table} {--module= : The module name} {--force : Overwrite existing files}';
+
     protected $description = 'Generate full feature from an existing table';
 
     protected $analyzer;
@@ -24,8 +25,9 @@ class SmartFromMigrationCommand extends Command
         $table = $this->argument('table');
         $this->info("Analyzing table: {$table}...");
 
-        if (!in_array($table, array_column($this->analyzer->getTables(), 'name'))) {
+        if (! in_array($table, array_column($this->analyzer->getTables(), 'name'))) {
             $this->error("Table '{$table}' not found in database.");
+
             return;
         }
 

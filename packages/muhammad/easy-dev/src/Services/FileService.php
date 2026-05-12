@@ -13,7 +13,8 @@ class FileService
      */
     public function upload(UploadedFile $file, string $folder = 'uploads', string $disk = 'public'): string
     {
-        $filename = Str::random(40) . '.' . $file->getClientOriginalExtension();
+        $filename = Str::random(40).'.'.$file->getClientOriginalExtension();
+
         return $file->storeAs($folder, $filename, $disk);
     }
 
@@ -22,7 +23,7 @@ class FileService
      */
     public function delete(?string $path, string $disk = 'public'): bool
     {
-        if (!$path) {
+        if (! $path) {
             return false;
         }
 
@@ -38,7 +39,7 @@ class FileService
      */
     public function url(?string $path, string $disk = 'public'): ?string
     {
-        if (!$path) {
+        if (! $path) {
             return null;
         }
 

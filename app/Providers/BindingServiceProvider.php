@@ -2,9 +2,8 @@
 
 namespace App\Providers;
 
-use Illuminate\Support\ServiceProvider;
-use Illuminate\Support\Str;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\ServiceProvider;
 
 class BindingServiceProvider extends ServiceProvider
 {
@@ -16,15 +15,17 @@ class BindingServiceProvider extends ServiceProvider
 
     protected function bindInterfaces($path, $namespace)
     {
-        if (! File::exists($path)) return;
+        if (! File::exists($path)) {
+            return;
+        }
 
         foreach (File::files($path) as $file) {
-            $class = $namespace . '\\' . $file->getBasename('.php');
-            $interface = $namespace . '\\' . $file->getBasename('.php') . 'Interface';
+            $class = $namespace.'\\'.$file->getBasename('.php');
+            $interface = $namespace.'\\'.$file->getBasename('.php').'Interface';
 
             // Check if interface exists in Contracts
             $contractNamespace = str_replace(['Services', 'Repositories'], 'Contracts', $namespace);
-            $interface = $contractNamespace . '\\' . $file->getBasename('.php') . 'Interface';
+            $interface = $contractNamespace.'\\'.$file->getBasename('.php').'Interface';
 
             if (interface_exists($interface)) {
                 $this->app->bind($interface, $class);

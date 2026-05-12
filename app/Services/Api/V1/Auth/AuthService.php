@@ -145,15 +145,15 @@ class AuthService
         // 1. Try to find the user by provider_id
         $user = $this->userRepository->findByProvider($provider, $socialUser->getId());
 
-        if (!$user) {
+        if (! $user) {
             // 2. Fallback: Check if we have a user with the same email
             $user = $this->userRepository->findByEmail($socialUser->getEmail());
 
-            if (!$user) {
+            if (! $user) {
                 // 3. Create a new user
                 $user = $this->userRepository->create([
                     'name' => $socialUser->getName() ?? $socialUser->getNickname() ?? 'Social User',
-                    'username' => str_replace(' ', '', strtolower($socialUser->getName() ?? 'user' . rand(100, 999))),
+                    'username' => str_replace(' ', '', strtolower($socialUser->getName() ?? 'user'.rand(100, 999))),
                     'email' => $socialUser->getEmail(),
                     'provider' => $provider,
                     'provider_id' => $socialUser->getId(),

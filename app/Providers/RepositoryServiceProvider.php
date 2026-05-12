@@ -2,8 +2,8 @@
 
 namespace App\Providers;
 
-use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\ServiceProvider;
 
 /**
  * RepositoryServiceProvider
@@ -41,17 +41,17 @@ class RepositoryServiceProvider extends ServiceProvider
             }
 
             $relativePath = str_replace(['/', '.php'], ['\\', ''], $file->getRelativePathname());
-            
+
             // Implementation: App\Services\User\UserService
-            $implClass = $baseNs . '\\' . $relativePath;
+            $implClass = $baseNs.'\\'.$relativePath;
 
             // Interface calculation
             $parts = explode('\\', $relativePath);
             $className = array_pop($parts);
-            $subNs = ! empty($parts) ? implode('\\', $parts) . '\\' : '';
-            
+            $subNs = ! empty($parts) ? implode('\\', $parts).'\\' : '';
+
             // Expected Interface: App\Services\User\Contracts\UserServiceInterface
-            $interface = $baseNs . '\\' . $subNs . 'Contracts\\' . $className . 'Interface';
+            $interface = $baseNs.'\\'.$subNs.'Contracts\\'.$className.'Interface';
 
             if (class_exists($implClass) && interface_exists($interface)) {
                 $this->app->bind($interface, $implClass);
@@ -62,7 +62,9 @@ class RepositoryServiceProvider extends ServiceProvider
     protected function discoverModules(): void
     {
         $modulesPath = base_path('Modules');
-        if (! File::exists($modulesPath)) return;
+        if (! File::exists($modulesPath)) {
+            return;
+        }
 
         foreach (File::directories($modulesPath) as $moduleDir) {
             $moduleName = basename($moduleDir);

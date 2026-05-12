@@ -37,7 +37,7 @@ trait HandlesAttributeConfig
         $reflection = new ReflectionClass($this);
         $attributes = $reflection->getAttributes(Guarded::class);
 
-        if (!empty($attributes)) {
+        if (! empty($attributes)) {
             $instance = $attributes[0]->newInstance();
             $this->guarded = $instance->columns;
         }

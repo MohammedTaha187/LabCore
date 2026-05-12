@@ -13,6 +13,7 @@ use App\Http\Resources\Api\V1\Auth\UserResource;
 use App\Services\Api\V1\Auth\AuthService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Laravel\Socialite\Facades\Socialite;
 
 class AuthController extends Controller
 {
@@ -120,7 +121,7 @@ class AuthController extends Controller
      */
     public function socialRedirect(string $provider): JsonResponse
     {
-        $url = \Laravel\Socialite\Facades\Socialite::driver($provider)
+        $url = Socialite::driver($provider)
             ->stateless()
             ->redirect()
             ->getTargetUrl();
@@ -134,8 +135,8 @@ class AuthController extends Controller
     public function socialCallback(string $provider): JsonResponse
     {
         try {
-            $socialUser = \Laravel\Socialite\Facades\Socialite::driver($provider)->stateless()->user();
-            
+            $socialUser = Socialite::driver($provider)->stateless()->user();
+
             $result = $this->authService->handleSocialLogin($provider, $socialUser);
 
             return response()->json([
@@ -145,7 +146,7 @@ class AuthController extends Controller
                 'expires_in' => $result['expires_in'],
             ]);
         } catch (\Exception $e) {
-            return response()->json(['message' => 'Social login failed: ' . $e->getMessage()], 400);
+            return response()->json(['message' => 'Social login failed: '.$e->getMessage()], 400);
         }
     }
 }

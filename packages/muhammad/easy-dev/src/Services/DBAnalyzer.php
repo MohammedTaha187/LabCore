@@ -49,7 +49,9 @@ class DBAnalyzer
         // HasMany relationships
         foreach ($this->getTables() as $otherTableData) {
             $otherTable = $otherTableData['name'];
-            if ($otherTable === $table) continue;
+            if ($otherTable === $table) {
+                continue;
+            }
 
             foreach ($this->getForeignKeys($otherTable) as $fk) {
                 if ($fk['foreign_table'] === $table) {
@@ -72,10 +74,13 @@ class DBAnalyzer
     public function isPivotTable(string $table): bool
     {
         $parts = explode('_', $table);
-        if (count($parts) !== 2) return false;
+        if (count($parts) !== 2) {
+            return false;
+        }
 
         // Simplified check: if it has 2 foreign keys and is named singular_singular
         $fks = $this->getForeignKeys($table);
+
         return count($fks) === 2;
     }
 
@@ -88,9 +93,11 @@ class DBAnalyzer
         foreach ($columns as $column) {
             if ($column['name'] === 'id') {
                 $type = strtolower($column['type'] ?? '');
+
                 return Str::contains($type, ['char(36)', 'uuid']);
             }
         }
+
         return false;
     }
 
@@ -117,7 +124,7 @@ class DBAnalyzer
 
         foreach ($columns as $column) {
             $name = $column['name'];
-            
+
             // Skip auto-incrementing/timestamp columns
             if ($name === 'id' || $name === 'created_at' || $name === 'updated_at' || $name === 'deleted_at') {
                 continue;
@@ -170,22 +177,26 @@ class DBAnalyzer
     public function isFileColumn(string $name): bool
     {
         $keywords = ['file', 'image', 'avatar', 'logo', 'icon', 'video', 'pdf', 'cv', 'attachment', 'cover', 'thumbnail', 'document'];
+
         return Str::contains(strtolower($name), $keywords);
     }
 
     public function isUrlColumn(string $name): bool
     {
         // Don't treat columns like 'file_url' as just URL if they should be handled as file uploads
-        if ($this->isFileColumn($name)) return false;
-        
+        if ($this->isFileColumn($name)) {
+            return false;
+        }
+
         $keywords = ['url', 'link', 'website', 'path'];
+
         return Str::contains(strtolower($name), $keywords);
     }
 
     protected function getMediaValidationRules(string $name): array
     {
         $name = strtolower($name);
-        
+
         if (Str::contains($name, ['image', 'avatar', 'logo', 'icon', 'cover', 'thumbnail'])) {
             return ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,svg', 'max:2048'];
         }

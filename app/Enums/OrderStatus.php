@@ -13,7 +13,7 @@ enum OrderStatus: string
 
     public function color(): string
     {
-        return match($this) {
+        return match ($this) {
             self::PENDING => 'gray',
             self::PROCESSING => 'blue',
             self::SHIPPED => 'orange',

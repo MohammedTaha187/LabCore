@@ -11,7 +11,7 @@ class SetLocaleMiddleware
     public function handle(Request $request, Closure $next)
     {
         $locale = $request->header('Accept-Language', config('app.locale'));
-        
+
         $locale = explode(',', $locale)[0];
         $locale = explode('-', $locale)[0];
 
