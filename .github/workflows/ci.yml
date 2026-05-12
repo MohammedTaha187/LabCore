@@ -36,8 +36,8 @@ jobs:
       - name: Install Composer Dependencies
         run: composer install --no-interaction --prefer-dist
 
-      - name: Start Docker Containers
-        run: docker compose up -d --build
+      - name: Start Required Docker Containers
+        run: docker compose up -d --build laravel.test mysql redis
 
       - name: Wait for MySQL
         run: |
