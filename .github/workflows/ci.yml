@@ -55,8 +55,9 @@ jobs:
 
       - name: Wait for MySQL
         run: |
-          until docker compose exec -T mysql mysqladmin ping -p"${DB_PASSWORD}" --silent; do
-            sleep 2
+          until docker compose exec -T laravel.test php -r "try { new PDO('mysql:host=mysql;port=3306;dbname=testing', 'sail', 'password'); exit(0); } catch (Exception \$e) { exit(1); }"; do
+            echo "Waiting for MySQL connection..."
+            sleep 3
           done
 
       - name: Generate Application Key
